@@ -12,8 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectValue, SelectTrigger } from "@/components/ui/select";
-import { User, Mail, IdCard, Briefcase, Building } from "lucide-react";
-import { Person } from "../types";
+import { User, Mail, Briefcase, Building } from "lucide-react";
+import type { Person } from "../types";
 
 interface AddRecipientDialogProps {
   open: boolean;

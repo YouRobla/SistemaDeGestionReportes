@@ -1,11 +1,9 @@
 "use client";
 
-import * as React from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Edit, Trash2 } from "lucide-react";
-import { Person } from "../types";
+import type { Person } from "../types";
 
 interface RecipientsTableColumnsProps {
   onEditClick: (recipient: Person) => void;

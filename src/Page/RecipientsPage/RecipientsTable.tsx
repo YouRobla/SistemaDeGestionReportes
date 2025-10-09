@@ -99,8 +99,6 @@ export default function RecipientsTable() {
       {/* Cuerpo de la tabla */}
       <RecipientsTableBody
         table={table}
-        onEditClick={handleEditClick}
-        onDeleteClick={handleDeleteClick}
       />
 
       {/* 🚀 Diálogos */}

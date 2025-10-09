@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { AlertTriangle, User } from "lucide-react";
-import { Person } from "../types";
+import type { Person } from "../types";
 
 interface DeleteRecipientDialogProps {
   open: boolean;

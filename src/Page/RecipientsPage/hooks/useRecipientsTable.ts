@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useState, useCallback } from "react";
 import { useProfesores } from "@/hooks/useProfesores";
-import { Person } from "../types";
+import type { Person } from "../types";
 
 export function useRecipientsTable() {
   // 🚀 Estados para los diálogos

@@ -1,26 +1,18 @@
 "use client";
 
-import * as React from "react";
 import { flexRender, type Table } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
-import { Person } from "../types";
+import { Table as UITable, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import type { Person } from "../types";
 
 interface RecipientsTableBodyProps {
   table: Table<Person>;
-  onEditClick: (recipient: Person) => void;
-  onDeleteClick: (recipient: Person) => void;
 }
 
 export function RecipientsTableBody({ 
-  table, 
-  onEditClick, 
-  onDeleteClick 
+  table
 }: RecipientsTableBodyProps) {
   return (
-    <Table className="border">
+    <UITable className="border">
       <TableHeader>
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
@@ -51,6 +43,6 @@ export function RecipientsTableBody({
           </TableRow>
         )}
       </TableBody>
-    </Table>
+    </UITable>
   );
 }
