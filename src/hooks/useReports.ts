@@ -19,7 +19,7 @@ const buildApiUrl = (filters: ReportFilters): string => {
     params.append('nombre', filters.search.trim());
   }
   
-  return `http://localhost:3000/api/reportes?${params.toString()}`;
+  return `https://sistema-de-gestion-reportes-kcgl.vercel.app/api/reportes?${params.toString()}`;
 };
 
 

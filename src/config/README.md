@@ -6,14 +6,14 @@ Para configurar la URL de la API, crea un archivo `.env` en la raíz del proyect
 
 ```bash
 # .env
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=https://sistema-de-gestion-reportes-kcgl.vercel.app
 ```
 
 ## 🌍 Configuraciones por Ambiente
 
 ### 🔧 Desarrollo Local
 ```bash
-VITE_API_BASE_URL=http://localhost:3000
+VITE_API_BASE_URL=https://sistema-de-gestion-reportes-kcgl.vercel.app
 ```
 
 ### 🚀 Producción
@@ -23,7 +23,7 @@ VITE_API_BASE_URL=https://tu-dominio.com
 
 ### 🧪 Testing
 ```bash
-VITE_API_BASE_URL=http://localhost:3001
+VITE_API_BASE_URL=https://sistema-de-gestion-reportes-kcgl.vercel.app
 ```
 
 ## 📝 Cómo Usar
