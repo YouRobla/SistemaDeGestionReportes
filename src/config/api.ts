@@ -1,7 +1,7 @@
 // 🚀 Configuración de la API
 export const API_CONFIG = {
   // URL base del servidor (desde variables de entorno)
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://sistema-de-gestion-reportes-kcgl.vercel.app/',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://backend-reporte.onrender.com',
   
   // Configuración de ambiente
   IS_DEVELOPMENT: import.meta.env.DEV,

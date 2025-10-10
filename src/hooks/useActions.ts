@@ -13,7 +13,7 @@ export function useActions(reporteId: number) {
     setError(null);
     
     try {
-      const response = await fetch(`https://sistema-de-gestion-reportes-kcgl.vercel.app/api/acciones/reporte/${reporteId}`);
+      const response = await fetch(`https://backend-reporte.onrender.com/api/acciones/reporte/${reporteId}`);
       
       if (!response.ok) {
         throw new Error(`Error al cargar acciones: ${response.status}`);
@@ -48,7 +48,7 @@ export function useActions(reporteId: number) {
       formData.append('reporteId', reporteId.toString());
       newAction.evidencias.forEach(file => formData.append('evidencias', file));
 
-      const response = await fetch('https://sistema-de-gestion-reportes-kcgl.vercel.app/api/acciones/completa', {
+      const response = await fetch('https://backend-reporte.onrender.com/api/acciones/completa', {
         method: 'POST',
         body: formData,
       });
@@ -75,7 +75,7 @@ export function useActions(reporteId: number) {
     setError(null);
     
     try {
-      const response = await fetch(`https://sistema-de-gestion-reportes-kcgl.vercel.app/api/acciones/${actionId}`, {
+      const response = await fetch(`https://backend-reporte.onrender.com/api/acciones/${actionId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ descripcion }),
@@ -109,7 +109,7 @@ export function useActions(reporteId: number) {
       const formData = new FormData();
       evidencias.forEach(file => formData.append('evidencias', file));
 
-      const response = await fetch(`https://sistema-de-gestion-reportes-kcgl.vercel.app/api/acciones/${actionId}/evidencias`, {
+      const response = await fetch(`https://backend-reporte.onrender.com/api/acciones/${actionId}/evidencias`, {
         method: 'POST',
         body: formData,
       });
@@ -139,7 +139,7 @@ export function useActions(reporteId: number) {
     setError(null);
     
     try {
-      const response = await fetch(`https://sistema-de-gestion-reportes-kcgl.vercel.app/api/acciones/${actionId}`, {
+      const response = await fetch(`https://backend-reporte.onrender.com/api/acciones/${actionId}`, {
         method: 'DELETE',
       });
 

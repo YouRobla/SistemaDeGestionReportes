@@ -19,7 +19,7 @@ const buildApiUrl = (filters: ReportFilters): string => {
     params.append('nombre', filters.search.trim());
   }
   
-  return `https://sistema-de-gestion-reportes-kcgl.vercel.app/api/reportes?${params.toString()}`;
+  return `https://backend-reporte.onrender.com/api/reportes?${params.toString()}`;
 };
 
 

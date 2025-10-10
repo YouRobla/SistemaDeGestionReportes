@@ -136,7 +136,7 @@ export function ActionsDialog({ reportId, onActionSaved }: ActionsDialogProps) {
       console.log('📤 Enviando datos al backend:', requestData);
       console.log('📤 JSON stringify:', JSON.stringify(requestData));
 
-      const response = await fetch(`https://sistema-de-gestion-reportes-kcgl.vercel.app/api/reportes/${reportId}/estado`, {
+      const response = await fetch(`https://backend-reporte.onrender.com/api/reportes/${reportId}/estado`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestData),
