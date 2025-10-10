@@ -221,7 +221,15 @@ const createColumns = (refetch: () => void): ColumnDef<Report>[] => [
   },
 ];
 
-export default function ReportTable() {
+interface ReportTableProps {
+  initialStatus?: string;
+  initialSearch?: string;
+}
+
+export default function ReportTable({ 
+  initialStatus, 
+  initialSearch 
+}: ReportTableProps = {}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -239,6 +247,18 @@ export default function ReportTable() {
     setSearch,
     refetch
   } = useReports();
+
+  // 🚀 Aplicar parámetros iniciales de URL
+  React.useEffect(() => {
+    if (initialStatus) {
+      console.log('🔍 Aplicando estado inicial desde URL:', initialStatus);
+      setEstadoFilter(initialStatus);
+    }
+    if (initialSearch) {
+      console.log('🔍 Aplicando búsqueda inicial desde URL:', initialSearch);
+      setSearch(initialSearch);
+    }
+  }, [initialStatus, initialSearch, setEstadoFilter, setSearch]);
 
   const columns = createColumns(refetch);
 
