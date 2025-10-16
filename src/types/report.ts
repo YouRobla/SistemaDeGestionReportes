@@ -13,6 +13,8 @@ export type Report = {
   descripcion_observacion: string;
   estado: "SinRevisar" | "EnProceso" | "Revisado";
   fecha_registro: string;
+  fecha_inicio?: string;
+  fecha_fin?: string;
   evidencias: {
     id: number;
     url: string;

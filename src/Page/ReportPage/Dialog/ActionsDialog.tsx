@@ -20,14 +20,17 @@ import type { NewAction } from "@/types";
 
 interface ActionsDialogProps {
   reportId: number;
+  report?: {
+    fecha_inicio?: string;
+    fecha_fin?: string;
+    estado: string;
+  };
   onActionSaved?: () => void;
 }
 
-export function ActionsDialog({ reportId, onActionSaved }: ActionsDialogProps) {
+export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialogProps) {
   const [open, setOpen] = React.useState(false);
-  const [fechaInicio] = React.useState<string>(
-    new Date().toISOString().slice(0, 10)
-  );
+  const [fechaInicio, setFechaInicio] = React.useState<string>("");
   const [fechaFin, setFechaFin] = React.useState<string>("");
   const [newActions, setNewActions] = React.useState<NewAction[]>([]);
 
@@ -44,9 +47,22 @@ export function ActionsDialog({ reportId, onActionSaved }: ActionsDialogProps) {
 
   React.useEffect(() => {
     if (open) {
+      // 🚀 Usar fechas del backend si están disponibles
+      if (report?.fecha_inicio) {
+        setFechaInicio(new Date(report.fecha_inicio).toISOString().slice(0, 10));
+      } else {
+        setFechaInicio(new Date().toISOString().slice(0, 10));
+      }
+      
+      if (report?.fecha_fin) {
+        setFechaFin(new Date(report.fecha_fin).toISOString().slice(0, 10));
+      } else {
+        setFechaFin("");
+      }
+      
       fetchActions();
     }
-  }, [open, fetchActions]);
+  }, [open, fetchActions, report]);
 
   // 🚀 Efecto separado para manejar el cierre del diálogo
   const prevOpen = React.useRef(open);
@@ -186,17 +202,24 @@ export function ActionsDialog({ reportId, onActionSaved }: ActionsDialogProps) {
               <label className="text-sm font-medium flex items-center gap-2">
                 <Calendar className="w-4 h-4" /> Fecha de finalización *
               </label>
-              <Input
-                type="date"
-                value={fechaFin}
-                onChange={(e) => setFechaFin(e.target.value)}
-                required
-                className={cn(
-                  "w-full",
-                  !fechaFin && "border-red-300 focus:border-red-500 focus:ring-red-500"
-                )}
-              />
-              {!fechaFin && (
+              {report?.estado === "Revisado" ? (
+                <div className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-600 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-gray-500" />
+                  {fechaFin ? new Date(fechaFin).toLocaleDateString('es-ES') : 'No especificada'}
+                </div>
+              ) : (
+                <Input
+                  type="date"
+                  value={fechaFin}
+                  onChange={(e) => setFechaFin(e.target.value)}
+                  required
+                  className={cn(
+                    "w-full",
+                    !fechaFin && "border-red-300 focus:border-red-500 focus:ring-red-500"
+                  )}
+                />
+              )}
+              {!fechaFin && report?.estado !== "Revisado" && (
                 <p className="text-xs text-red-500">Este campo es obligatorio para finalizar</p>
               )}
             </div>

@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import ReportViewer from "./Dialog/DialogForm";
 import { ActionsDialog } from "./Dialog/ActionsDialog";
+import { ReportGeneratorModal } from "@/components/ReportGenerator/ReportGeneratorModal";
 import { useReports } from "@/hooks";
 import type { Report } from "@/types";
 
@@ -195,9 +196,10 @@ const createColumns = (refetch: () => void): ColumnDef<Report>[] => [
   {
     accessorKey: "acciones",
     header: "Acciones",
-    size: 140,
+    size: 180,
     cell: ({ row }) => {
       const [isOpen, setIsOpen] = React.useState(false);
+      const [isReportGeneratorOpen, setIsReportGeneratorOpen] = React.useState(false);
       const estado = row.getValue("estado") as Report["estado"];
       
       return (
@@ -211,10 +213,44 @@ const createColumns = (refetch: () => void): ColumnDef<Report>[] => [
           {/* 🚀 Solo mostrar ActionsDialog si NO está en estado "Revisado" */}
           {estado !== "Revisado" && (
             <ActionsDialog 
-              reportId={row.original.id} 
+              reportId={row.original.id}
+              report={{
+                fecha_inicio: (row.original as any).fecha_inicio,
+                fecha_fin: (row.original as any).fecha_fin,
+                estado: row.original.estado
+              }}
               onActionSaved={refetch}
             />
           )}
+          {/* 🚀 Botón de generación de reportes solo si está "Revisado" */}
+          {estado === "Revisado" && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsReportGeneratorOpen(true)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Generar Reporte PDF</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+          
+          {/* 🚀 Modal de generación de reportes */}
+          <ReportGeneratorModal
+            report={row.original}
+            open={isReportGeneratorOpen}
+            onOpenChange={setIsReportGeneratorOpen}
+          />
       </div>
       );
     },
@@ -246,7 +282,7 @@ export default function ReportTable({
     setEstadoFilter,
     setSearch,
     refetch
-  } = useReports();
+  } = useReports({ estado: 'SinRevisar' }); // 🚀 Por defecto mostrar solo "Sin Revisar"
 
   // 🚀 Aplicar parámetros iniciales de URL
   React.useEffect(() => {
@@ -331,7 +367,7 @@ export default function ReportTable({
         </div>
         <div className="sm:w-48 flex-shrink-0 w-full">
         <Select
-            value={filters.estado || "all"}
+            value={filters.estado || "SinRevisar"}
             onValueChange={(value) => {
               setEstadoFilter(value);
             }}
@@ -346,8 +382,8 @@ export default function ReportTable({
             <SelectItem value="Revisado">Revisado</SelectItem>
           </SelectContent>
         </Select>
-        </div>
-        
+      </div>
+
         {/* 🚀 Botón de recarga manual */}
         <div className="flex-shrink-0">
           <Button 

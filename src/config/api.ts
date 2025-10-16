@@ -1,7 +1,7 @@
 // 🚀 Configuración de la API
 export const API_CONFIG = {
   // URL base del servidor (desde variables de entorno)
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://backend-reporte.onrender.com',
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
   
   // Configuración de ambiente
   IS_DEVELOPMENT: import.meta.env.DEV,

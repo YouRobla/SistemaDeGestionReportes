@@ -31,6 +31,7 @@ export function AddActionDialog({
   const [open, setOpen] = React.useState(false);
   const [descripcion, setDescripcion] = React.useState(action?.descripcion || "");
   const [evidencias, setEvidencias] = React.useState<File[]>(action?.evidencias || []);
+  const [descripcionError, setDescripcionError] = React.useState("");
 
   React.useEffect(() => {
     if (action) {
@@ -52,12 +53,29 @@ export function AddActionDialog({
     setEvidencias((prev) => prev.filter((_, i) => i !== index));
   };
 
+  /** ✅ Validar descripción en tiempo real */
+  const validateDescripcion = (text: string) => {
+    const palabras = text.trim().split(/\s+/).filter(palabra => palabra.length > 0);
+    if (text.trim() && palabras.length < 5) {
+      setDescripcionError("La descripción debe tener al menos 5 palabras");
+      return false;
+    } else {
+      setDescripcionError("");
+      return true;
+    }
+  };
+
+  /** 📝 Manejar cambio de descripción */
+  const handleDescripcionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setDescripcion(value);
+    validateDescripcion(value);
+  };
+
   /** 💾 Guardar acción */
   const handleSave = () => {
-    // Validar que la descripción tenga más de 5 palabras
-    const palabras = descripcion.trim().split(/\s+/).filter(palabra => palabra.length > 0);
-    if (palabras.length < 5) {
-      alert('La descripción debe tener al menos 5 palabras');
+    // Validar descripción antes de guardar
+    if (!validateDescripcion(descripcion)) {
       return;
     }
 
@@ -70,6 +88,7 @@ export function AddActionDialog({
     if (!isEdit) {
       setDescripcion("");
       setEvidencias([]);
+      setDescripcionError("");
     }
     setOpen(false);
   };
@@ -79,6 +98,7 @@ export function AddActionDialog({
     if (!isEdit) {
       setDescripcion("");
       setEvidencias([]);
+      setDescripcionError("");
     }
   };
 
@@ -114,10 +134,22 @@ export function AddActionDialog({
             </label>
             <Textarea
               value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
+              onChange={handleDescripcionChange}
               placeholder="Describe la acción..."
-              className="max-h-[140px] resize-none border border-gray-300 focus-visible:ring-1 focus-visible:ring-gray-400"
+              className={`max-h-[140px] resize-none border ${
+                descripcionError 
+                  ? "border-red-300 focus:border-red-500 focus:ring-red-500" 
+                  : "border-gray-300 focus:ring-gray-400"
+              } focus-visible:ring-1`}
             />
+            {descripcionError && (
+              <p className="text-sm text-red-500 flex items-center gap-1">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {descripcionError}
+              </p>
+            )}
           </div>
 
           {/* 📎 Evidencias */}
@@ -173,7 +205,10 @@ export function AddActionDialog({
             <Button variant="outline" onClick={handleClose}>
               Cancelar
             </Button>
-            <Button onClick={handleSave} disabled={!descripcion.trim()}>
+            <Button 
+              onClick={handleSave} 
+              disabled={!descripcion.trim() || !!descripcionError}
+            >
               {isEdit ? "Actualizar Acción" : "Guardar Acción"}
             </Button>
           </div>
