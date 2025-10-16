@@ -59,16 +59,25 @@ export default function RecipientsTable() {
   const table = useReactTable({
     data,
     columns,
-    state: { sorting, columnFilters },
+    state: { 
+      sorting, 
+      columnFilters, 
+      globalFilter 
+    },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    globalFilterFn: (row, filterValue) => {
+    globalFilterFn: (row, _columnId, filterValue) => {
       // Filtrado global: usa nombre_completo
-      const fullName = row.original.nombre_completo.toLowerCase();
-      return fullName.includes(filterValue.toLowerCase());
+      if (!filterValue || filterValue.trim() === '') {
+        return true; // Mostrar todos si no hay filtro
+      }
+      const fullName = row.original.nombre_completo?.toLowerCase() || '';
+      const searchTerm = filterValue.toLowerCase().trim();
+      return fullName.includes(searchTerm);
     },
   });
 

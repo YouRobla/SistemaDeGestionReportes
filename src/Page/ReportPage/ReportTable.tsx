@@ -367,14 +367,14 @@ export default function ReportTable({
         </div>
         <div className="sm:w-48 flex-shrink-0 w-full">
         <Select
-            value={filters.estado || "SinRevisar"}
+            value={filters.estado || "all"}
             onValueChange={(value) => {
               setEstadoFilter(value);
             }}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Estado" />
-          </SelectTrigger>
+            </SelectTrigger>
             <SelectContent>
             <SelectItem value="all">Todos</SelectItem>
               <SelectItem value="SinRevisar">Sin Revisar</SelectItem>
