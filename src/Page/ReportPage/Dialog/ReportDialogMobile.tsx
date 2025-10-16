@@ -22,7 +22,14 @@ export function ReportDialogMobile({ report, setOpenEvidencia, setSelectedImage,
           <DialogTitle className="text-lg font-bold">Reporte (Versión Móvil)</DialogTitle>
         </div>
         {/* 🚀 Solo mostrar botón de acciones si showActionsButton es true */}
-        {showActionsButton && <ActionsDialog reportId={report.id}/>}
+        {showActionsButton && <ActionsDialog 
+          reportId={report.id}
+          report={{
+            fecha_inicio: (report as any).fecha_inicio,
+            fecha_fin: (report as any).fecha_fin,
+            estado: report.estado
+          }}
+        />}
       </DialogHeader>
 
       <div className="space-y-3 mt-2">

@@ -8,9 +8,14 @@ import { useActions } from "@/hooks/useActions";
 
 interface ActionsDialogProps {
   reportId: number;
+  report?: {
+    fecha_inicio?: string;
+    fecha_fin?: string;
+    estado?: string;
+  };
 }
 
-export function ActionsDialog({ reportId }: ActionsDialogProps) {
+export function ActionsDialog({ reportId, report }: ActionsDialogProps) {
   const [open, setOpen] = useState(false);
 
   // 🚀 Hook para obtener las acciones reales
@@ -35,15 +40,21 @@ export function ActionsDialog({ reportId }: ActionsDialogProps) {
   // 🚀 Establecer fechas cuando se abre el diálogo
   useEffect(() => {
     if (open) {
-      const hoy = new Date().toISOString().slice(0, 10);
+      // 🚀 Fecha de inicio: usar fecha del backend o fecha actual
+      if (report?.fecha_inicio) {
+        setFechaInicio(new Date(report.fecha_inicio).toISOString().slice(0, 10));
+      } else {
+        setFechaInicio(new Date().toISOString().slice(0, 10));
+      }
       
-      // 🚀 Fecha de inicio: usar fecha actual (se establece cuando se registra la primera evidencia)
-      setFechaInicio(hoy);
-      
-      // 🚀 Fecha de fin: usar fecha actual como fecha de finalización
-      setFechaFin(hoy);
+      // 🚀 Fecha de fin: usar fecha del backend o vacío
+      if (report?.fecha_fin) {
+        setFechaFin(new Date(report.fecha_fin).toISOString().slice(0, 10));
+      } else {
+        setFechaFin("");
+      }
     }
-  }, [open, accionesReales]);
+  }, [open, report]);
 
   // 🚀 Función para descargar evidencias
   const handleDownloadEvidence = (url: string, filename: string) => {
@@ -186,18 +197,6 @@ export function ActionsDialog({ reportId }: ActionsDialogProps) {
                       <Calendar className="w-3 h-3" />
                       Reporte ID: {accion.reporteId}
                     </span>
-                    {fechaInicio && (
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        Inicio: {new Date(fechaInicio).toLocaleDateString('es-ES')}
-                      </span>
-                    )}
-                    {fechaFin && (
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        Fin: {new Date(fechaFin).toLocaleDateString('es-ES')}
-              </span>
-                    )}
                   </div>
                 </div>
               ))}

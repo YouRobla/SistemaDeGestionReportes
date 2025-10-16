@@ -22,7 +22,14 @@ export function ReportDialogDesktop({ report, setOpenEvidencia, setSelectedImage
         <div className="flex items-center justify-between">
           <DialogTitle className="text-xl font-bold">Reporte de Actos y Condiciones Inseguras</DialogTitle>
           {/* 🚀 Solo mostrar botón de acciones si showActionsButton es true */}
-          {showActionsButton && <ActionsDialog reportId={report.id}/>}
+          {showActionsButton && <ActionsDialog 
+            reportId={report.id}
+            report={{
+              fecha_inicio: (report as any).fecha_inicio,
+              fecha_fin: (report as any).fecha_fin,
+              estado: report.estado
+            }}
+          />}
         </div>
       </DialogHeader>
 
