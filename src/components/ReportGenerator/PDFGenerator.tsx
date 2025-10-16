@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     color: '#3B82F6',
     marginBottom: 4,
     fontFamily: 'Courier',
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
   },
   simpleEvidenceList: {
     marginBottom: 15,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     color: '#3B82F6',
     marginBottom: 3,
     fontFamily: 'Courier',
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
   },
   evidenceContainer: {
     marginTop: 8,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     color: '#3B82F6',
     marginBottom: 3,
     fontFamily: 'Courier',
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
   },
   noEvidenceText: {
     fontSize: 10,
