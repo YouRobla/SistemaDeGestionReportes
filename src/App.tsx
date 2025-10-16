@@ -4,7 +4,7 @@ import MainLayout from "./layouts/MainLayout"
 import Reports from "./Page/ReportPage/MainReportPage"
 import QRGenerator from "./Page/QRPage/MainQrPage"
 import MainRecipientsPage from "./Page/RecipientsPage/MainRecipientsPage"
-import Pruebasdeshadcn from "./pruebasdeshadcn"
+// import Pruebasdeshadcn from "./pruebasdeshadcn" // 🚀 Comentado temporalmente
 // Vistas temporales (puedes reemplazar por tus componentes reales)
 
 
@@ -12,8 +12,8 @@ const router = createBrowserRouter([
   {
     element: <MainLayout />,
     children: [
-      { path: "/", element: <Navigate to="/dashboard" replace /> },
-      { path: "dashboard", element: <Pruebasdeshadcn/> },
+      { path: "/", element: <Navigate to="/reports" replace /> },
+      // { path: "dashboard", element: <Pruebasdeshadcn/> }, // 🚀 Comentado temporalmente
       { path: "reports", element: <Reports /> },
       { path: "email-settings", element: <MainRecipientsPage/> },
       { path: "generate-qr", element: <QRGenerator/> },

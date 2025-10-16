@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import {
-  SquareTerminal,
+  // SquareTerminal, // 🚀 Comentado temporalmente
   FileText,
   Mail,
   QrCode,
@@ -35,15 +35,16 @@ const data = {
     { name: "Evil Corp.", logo: Command, plan: "Free" },
   ],
   navMain: [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        { title: "Inicio", url: "/" },
-      ],
-    },
+    // 🚀 Dashboard comentado temporalmente
+    // {
+    //   title: "Dashboard",
+    //   url: "/",
+    //   icon: SquareTerminal,
+    //   isActive: true,
+    //   items: [
+    //     { title: "Inicio", url: "/" },
+    //   ],
+    // },
     {
       title: "Reportes",
       url: "/reports",
