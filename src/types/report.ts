@@ -3,14 +3,11 @@ export type Report = {
   numero_registro: string;
   tipo_documento: string;
   numero_documento: string;
-  nombre_completo: string;
-  correo_institucional: string;
-  nombre_reportante: string;
-  area_texto: string;
+  sede: string; // ✅ NUEVO - Reemplaza area_texto
   tipo_reporte: string;
-  relacionado_con: string;
   lugar_incidente: string;
   descripcion_observacion: string;
+  acciones_tomadas?: string; // ✅ NUEVO - Campo opcional
   estado: "SinRevisar" | "EnProceso" | "Revisado";
   fecha_registro: string;
   fecha_inicio?: string;

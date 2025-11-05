@@ -181,8 +181,8 @@ export function ReportGeneratorModal({
                 </h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="font-medium text-gray-600">Reportante:</span>
-                    <p className="text-gray-800">{report.nombre_completo}</p>
+                    <span className="font-medium text-gray-600">Sede:</span>
+                    <p className="text-gray-800">{report.sede || 'SIN_SEDE'}</p>
                   </div>
                   <div>
                     <span className="font-medium text-gray-600">Tipo:</span>

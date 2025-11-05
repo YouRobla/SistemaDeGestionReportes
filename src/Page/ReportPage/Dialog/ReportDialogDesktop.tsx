@@ -3,7 +3,7 @@
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { User, Mail, MapPin, Calendar, FileText, AlertTriangle, Image} from "lucide-react";
+import { User, MapPin, Calendar, FileText, AlertTriangle, Image} from "lucide-react";
 import { InfoField } from "@/components/InfoField";
 import { ActionsDialog} from "../Actions/ActionsDialog";
 import type { Report } from "@/types";
@@ -52,13 +52,11 @@ export function ReportDialogDesktop({ report, setOpenEvidencia, setSelectedImage
 
         {/* Grid de información */}
         <div className="overflow-x-auto">
-          <div className="min-w-[700px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-            <InfoField icon={<User className="h-4 w-4" />} label="Reportante" value={report.nombre_reportante || 'N/A'} />
-            <InfoField icon={<User className="h-4 w-4" />} label="DNI" value={report.numero_documento || 'N/A'} />
-            <InfoField icon={<Mail className="h-4 w-4" />} label="Correo" value={report.correo_institucional || 'N/A'} />
-            <InfoField icon={<MapPin className="h-4 w-4" />} label="DZ/Área" value={report.area_texto || 'N/A'} />
-            <InfoField icon={<FileText className="h-4 w-4" />} label="Relacionado" value={report.relacionado_con || 'N/A'} />
-            <InfoField icon={<Calendar className="h-4 w-4" />} label="Fecha" value={new Date(report.fecha_registro).toLocaleString('es-ES', {
+          <div className="min-w-[700px] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <InfoField icon={<User className="h-4 w-4" />} label="Tipo Documento" value={report.tipo_documento || 'N/A'} />
+            <InfoField icon={<User className="h-4 w-4" />} label="Nro. Documento" value={report.numero_documento || 'N/A'} />
+            <InfoField icon={<MapPin className="h-4 w-4" />} label="Sede" value={report.sede || 'SIN_SEDE'} />
+            <InfoField icon={<Calendar className="h-4 w-4" />} label="Fecha Registro" value={new Date(report.fecha_registro).toLocaleString('es-ES', {
               year: 'numeric',
               month: '2-digit',
               day: '2-digit',
@@ -76,6 +74,17 @@ export function ReportDialogDesktop({ report, setOpenEvidencia, setSelectedImage
           </div>
           <p className="text-sm text-gray-700 leading-relaxed">{report.descripcion_observacion || 'Sin descripción'}</p>
         </div>
+
+        {/* Acciones Tomadas (si existe) */}
+        {report.acciones_tomadas && (
+          <div className="border rounded-lg p-4 bg-blue-50 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <FileText className="h-4 w-4 text-blue-600" />
+              <h3 className="font-bold text-sm text-blue-800">ACCIONES TOMADAS AL MOMENTO</h3>
+            </div>
+            <p className="text-sm text-gray-700 leading-relaxed">{report.acciones_tomadas}</p>
+          </div>
+        )}
 
         {/* Evidencia Fotográfica */}
         <div className="border rounded-lg p-4 bg-gray-50 shadow-sm">

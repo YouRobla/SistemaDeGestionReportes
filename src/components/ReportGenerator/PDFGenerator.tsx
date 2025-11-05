@@ -324,25 +324,25 @@ export function PDFGenerator({ report, actions }: PDFGeneratorProps) {
           </View>
         )}
 
-        {/* 👤 Información del Reportante */}
+        {/* 👤 Información del Documento */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Información del Reportante</Text>
+          <Text style={styles.sectionTitle}>Información del Documento</Text>
           <View style={styles.grid}>
             <View style={styles.gridItem}>
-              <Text style={styles.label}>Nombre Completo</Text>
-              <Text style={styles.value}>{report.nombre_completo}</Text>
+              <Text style={styles.label}>Tipo de Documento</Text>
+              <Text style={styles.value}>{report.tipo_documento}</Text>
             </View>
             <View style={styles.gridItem}>
               <Text style={styles.label}>Número de Documento</Text>
               <Text style={styles.value}>{report.numero_documento}</Text>
             </View>
             <View style={styles.gridItem}>
-              <Text style={styles.label}>Correo Institucional</Text>
-              <Text style={styles.value}>{report.correo_institucional}</Text>
+              <Text style={styles.label}>Sede</Text>
+              <Text style={styles.value}>{report.sede || 'SIN_SEDE'}</Text>
             </View>
             <View style={styles.gridItem}>
-              <Text style={styles.label}>Reportado por</Text>
-              <Text style={styles.value}>{report.nombre_reportante}</Text>
+              <Text style={styles.label}>Fecha de Registro</Text>
+              <Text style={styles.value}>{formatDate(report.fecha_registro)}</Text>
             </View>
           </View>
         </View>
@@ -356,20 +356,8 @@ export function PDFGenerator({ report, actions }: PDFGeneratorProps) {
               <Text style={styles.value}>{report.tipo_reporte}</Text>
             </View>
             <View style={styles.gridItem}>
-              <Text style={styles.label}>Relacionado con</Text>
-              <Text style={styles.value}>{report.relacionado_con}</Text>
-            </View>
-            <View style={styles.gridItem}>
               <Text style={styles.label}>Lugar del Incidente</Text>
               <Text style={styles.value}>{report.lugar_incidente}</Text>
-            </View>
-            <View style={styles.gridItem}>
-              <Text style={styles.label}>Área</Text>
-              <Text style={styles.value}>{report.area_texto}</Text>
-            </View>
-            <View style={styles.gridItem}>
-              <Text style={styles.label}>Fecha de Registro</Text>
-              <Text style={styles.value}>{formatDate(report.fecha_registro)}</Text>
             </View>
           </View>
         </View>
@@ -379,6 +367,14 @@ export function PDFGenerator({ report, actions }: PDFGeneratorProps) {
           <Text style={styles.sectionTitle}>Descripción del Incidente</Text>
           <Text style={styles.description}>{report.descripcion_observacion}</Text>
         </View>
+
+        {/* 📋 Acciones Tomadas al Momento (si existe) */}
+        {report.acciones_tomadas && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Acciones Tomadas al Momento del Reporte</Text>
+            <Text style={styles.description}>{report.acciones_tomadas}</Text>
+          </View>
+        )}
 
         {/* 🎯 Acciones Tomadas */}
         {actions && actions.length > 0 && (

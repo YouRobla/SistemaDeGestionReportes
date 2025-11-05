@@ -59,24 +59,24 @@ const createColumns = (refetch: () => void): ColumnDef<Report>[] => [
     }
   },
   { 
-    accessorKey: "nombre_completo", 
-    header: "Persona",
-    size: 220,
+    accessorKey: "sede", 
+    header: "Sede",
+    size: 200,
     cell: ({ row }) => {
-      const nombre = row.getValue("nombre_completo") as string;
-      const isLong = nombre.length > 25; // Solo si es más largo que 25 caracteres
+      const sede = row.getValue("sede") as string;
+      const isLong = sede.length > 20; // Solo si es más largo que 20 caracteres
       
       if (isLong) {
         return (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="text-sm font-medium text-gray-900 text-left px-2 py-1 max-w-[200px] truncate cursor-help">
-                  {nombre}
+                <div className="text-sm font-medium text-gray-900 text-left px-2 py-1 max-w-[180px] truncate cursor-help">
+                  {sede}
                 </div>
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs">
-                <p className="text-xs">{nombre}</p>
+                <p className="text-xs">{sede}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -85,7 +85,7 @@ const createColumns = (refetch: () => void): ColumnDef<Report>[] => [
       
       return (
         <div className="text-sm font-medium text-gray-900 text-left px-2 py-1">
-          {nombre}
+          {sede}
         </div>
       );
     }
@@ -123,24 +123,24 @@ const createColumns = (refetch: () => void): ColumnDef<Report>[] => [
     }
   },
   { 
-    accessorKey: "area_texto", 
-    header: "Área",
-    size: 140,
+    accessorKey: "lugar_incidente", 
+    header: "Lugar",
+    size: 180,
     cell: ({ row }) => {
-      const area = row.getValue("area_texto") as string;
-      const isLong = area.length > 15; // Solo si es más largo que 15 caracteres
+      const lugar = row.getValue("lugar_incidente") as string;
+      const isLong = lugar.length > 18; // Solo si es más largo que 18 caracteres
       
       if (isLong) {
         return (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="text-sm font-medium text-gray-700 text-left px-2 py-1 max-w-[120px] truncate cursor-help">
-                  {area}
+                <div className="text-sm font-medium text-gray-700 text-left px-2 py-1 max-w-[160px] truncate cursor-help">
+                  {lugar}
                 </div>
               </TooltipTrigger>
               <TooltipContent side="top" className="max-w-xs">
-                <p className="text-xs">{area}</p>
+                <p className="text-xs">{lugar}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -149,7 +149,7 @@ const createColumns = (refetch: () => void): ColumnDef<Report>[] => [
       
       return (
         <div className="text-sm font-medium text-gray-700 text-left px-2 py-1">
-          {area}
+          {lugar}
         </div>
       );
     }

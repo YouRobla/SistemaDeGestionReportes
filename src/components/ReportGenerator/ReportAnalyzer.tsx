@@ -165,32 +165,28 @@ export function ReportAnalyzer({
 
       {/* 📋 Información Detallada */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 👤 Información del Reportante */}
+        {/* 📄 Información del Documento */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <User className="w-5 h-5 text-blue-600" />
-              Información del Reportante
+              Información del Documento
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm font-medium text-gray-600">Nombre Completo</p>
-                <p className="text-sm text-gray-800">{report.nombre_completo}</p>
+                <p className="text-sm font-medium text-gray-600">Tipo de Documento</p>
+                <p className="text-sm text-gray-800">{report.tipo_documento}</p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Documento</p>
+                <p className="text-sm font-medium text-gray-600">Nro. Documento</p>
                 <p className="text-sm text-gray-800">{report.numero_documento}</p>
               </div>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">Correo Institucional</p>
-              <p className="text-sm text-gray-800">{report.correo_institucional}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Reportado por</p>
-              <p className="text-sm text-gray-800">{report.nombre_reportante}</p>
+              <p className="text-sm font-medium text-gray-600">Sede</p>
+              <p className="text-sm text-gray-800">{report.sede || 'SIN_SEDE'}</p>
             </div>
           </CardContent>
         </Card>
@@ -211,16 +207,8 @@ export function ReportAnalyzer({
               </Badge>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">Relacionado con</p>
-              <p className="text-sm text-gray-800">{report.relacionado_con}</p>
-            </div>
-            <div>
               <p className="text-sm font-medium text-gray-600">Lugar del Incidente</p>
               <p className="text-sm text-gray-800">{report.lugar_incidente}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Área</p>
-              <p className="text-sm text-gray-800">{report.area_texto}</p>
             </div>
           </CardContent>
         </Card>
@@ -242,6 +230,25 @@ export function ReportAnalyzer({
           </div>
         </CardContent>
       </Card>
+
+      {/* 📋 Acciones Tomadas al Momento (si existe) */}
+      {report.acciones_tomadas && (
+        <Card className="border-l-4 border-l-blue-500">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <CheckCircle className="w-5 h-5 text-blue-600" />
+              Acciones Tomadas al Momento del Reporte
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-blue-50 rounded-lg p-4">
+              <p className="text-sm text-gray-800 leading-relaxed">
+                {report.acciones_tomadas}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* 🎯 Acciones Tomadas */}
       {actions && actions.length > 0 && (

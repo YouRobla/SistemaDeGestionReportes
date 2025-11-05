@@ -2,7 +2,7 @@
 
 import { DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { User, Mail, MapPin, Calendar, FileText,Image } from "lucide-react";
+import { User, MapPin, Calendar, FileText,Image } from "lucide-react";
 import { InfoField } from "../../../components/InfoField";
 import { ActionsDialog } from "../Actions/ActionsDialog";
 import type { Report } from "@/types";
@@ -35,12 +35,12 @@ export function ReportDialogMobile({ report, setOpenEvidencia, setSelectedImage,
       <div className="space-y-3 mt-2">
         {/* Información principal */}
         <div className="grid grid-cols-1 gap-3">
-          <InfoField icon={<User className="h-4 w-4" />} label="Reporte" value={report.numero_registro || 'N/A'} />
-          <InfoField icon={<User className="h-4 w-4" />} label="Reportante" value={report.nombre_reportante || 'N/A'} />
-          <InfoField icon={<User className="h-4 w-4" />} label="DNI" value={report.numero_documento || 'N/A'} />
-          <InfoField icon={<Mail className="h-4 w-4" />} label="Correo" value={report.correo_institucional || 'N/A'} />
-          <InfoField icon={<MapPin className="h-4 w-4" />} label="DZ/Área" value={report.area_texto || 'N/A'} />
-          <InfoField icon={<FileText className="h-4 w-4" />} label="Relacionado" value={report.relacionado_con || 'N/A'} />
+          <InfoField icon={<FileText className="h-4 w-4" />} label="Nro. Registro" value={report.numero_registro || 'N/A'} />
+          <InfoField icon={<User className="h-4 w-4" />} label="Tipo Documento" value={report.tipo_documento || 'N/A'} />
+          <InfoField icon={<User className="h-4 w-4" />} label="Nro. Documento" value={report.numero_documento || 'N/A'} />
+          <InfoField icon={<MapPin className="h-4 w-4" />} label="Sede" value={report.sede || 'SIN_SEDE'} />
+          <InfoField icon={<FileText className="h-4 w-4" />} label="Tipo Reporte" value={report.tipo_reporte || 'N/A'} />
+          <InfoField icon={<MapPin className="h-4 w-4" />} label="Lugar" value={report.lugar_incidente || 'N/A'} />
           <InfoField icon={<Calendar className="h-4 w-4" />} label="Fecha" value={new Date(report.fecha_registro).toLocaleString('es-ES', {
             year: 'numeric',
             month: '2-digit',
@@ -57,6 +57,16 @@ export function ReportDialogMobile({ report, setOpenEvidencia, setSelectedImage,
           </h3>
           <p className="text-sm text-gray-700 mt-1">{report.descripcion_observacion || 'Sin descripción'}</p>
         </div>
+
+        {/* Acciones Tomadas (si existe) */}
+        {report.acciones_tomadas && (
+          <div className="border rounded-lg p-3 bg-blue-50">
+            <h3 className="font-bold text-sm text-blue-800 flex items-center gap-1">
+              <FileText className="h-4 w-4 text-blue-600" /> ACCIONES TOMADAS
+            </h3>
+            <p className="text-sm text-gray-700 mt-1">{report.acciones_tomadas}</p>
+          </div>
+        )}
 
         {/* Evidencia Fotográfica */}
         <div className="border rounded-lg p-3 bg-gray-50">
