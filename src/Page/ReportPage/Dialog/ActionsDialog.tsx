@@ -33,6 +33,8 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
   const [fechaInicio, setFechaInicio] = React.useState<string>("");
   const [fechaFin, setFechaFin] = React.useState<string>("");
   const [newActions, setNewActions] = React.useState<NewAction[]>([]);
+  // 🚀 Estado para rastrear si hubo cambios que requieran refrescar la tabla
+  const [shouldRefreshTable, setShouldRefreshTable] = React.useState(false);
 
   // 🚀 Hook para manejar acciones con la API
   const {
@@ -45,17 +47,49 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
     deleteAction,
   } = useActions(reportId);
 
+  // 🚀 Función para formatear fecha en formato YYYY-MM-DD sin problemas de zona horaria
+  const formatDateToLocal = (dateString: string) => {
+    // Extraer solo la parte de la fecha (YYYY-MM-DD) sin procesar la hora
+    // Esto evita problemas de conversión de zona horaria
+    const fechaSolo = dateString.split('T')[0];
+    return fechaSolo;
+  };
+
+  // 🚀 Función para obtener la fecha actual en formato local
+  const getTodayLocal = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // 🚀 Función para formatear fecha para visualización (dd/mm/yyyy)
+  const formatDateForDisplay = (dateString: string) => {
+    if (!dateString) return 'No especificada';
+    // Extraer año, mes y día directamente del string YYYY-MM-DD
+    const [year, month, day] = dateString.split('-');
+    return `${day}/${month}/${year}`;
+  };
+
   React.useEffect(() => {
     if (open) {
-      // 🚀 Usar fechas del backend si están disponibles
-      if (report?.fecha_inicio) {
-        setFechaInicio(new Date(report.fecha_inicio).toISOString().slice(0, 10));
+      // 🚀 Resetear el estado de refresco cuando se abre el diálogo
+      setShouldRefreshTable(false);
+      
+      // 🚀 Lógica para fecha de inicio
+      // Si el reporte está en "SinRevisar" y no tiene fecha_inicio, usar fecha de hoy
+      // Si ya tiene fecha_inicio del backend, usar esa fecha
+      if (report?.estado === "SinRevisar" && !report?.fecha_inicio) {
+        setFechaInicio(getTodayLocal());
+      } else if (report?.fecha_inicio) {
+        setFechaInicio(formatDateToLocal(report.fecha_inicio));
       } else {
-        setFechaInicio(new Date().toISOString().slice(0, 10));
+        setFechaInicio(getTodayLocal());
       }
       
       if (report?.fecha_fin) {
-        setFechaFin(new Date(report.fecha_fin).toISOString().slice(0, 10));
+        setFechaFin(formatDateToLocal(report.fecha_fin));
       } else {
         setFechaFin("");
       }
@@ -65,13 +99,19 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
   }, [open, fetchActions, report]);
 
   // 🚀 Efecto separado para manejar el cierre del diálogo
+  // Solo refrescar la tabla si hubo cambios significativos (cambio de estado)
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
-    if (prevOpen.current && !open && onActionSaved) {
-      onActionSaved();
+    if (prevOpen.current && !open) {
+      // 🚀 Solo refrescar si hubo cambios que requieran actualizar la tabla
+      if (shouldRefreshTable && onActionSaved) {
+        onActionSaved();
+      }
+      // Resetear el estado para la próxima vez
+      setShouldRefreshTable(false);
     }
     prevOpen.current = open;
-  }, [open, onActionSaved]);
+  }, [open, shouldRefreshTable, onActionSaved]);
 
   const handleAddAction = (action: NewAction) => {
     setNewActions(prev => {
@@ -95,12 +135,51 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
         return;
       }
       
+      // 🚀 Si es la primera acción y el reporte está en "SinRevisar", actualizar el estado a "EnProceso"
+      const esLaPrimeraAccion = !existingActions || existingActions.length === 0;
+      const cambioEstado = esLaPrimeraAccion && report?.estado === "SinRevisar";
+      
+      if (cambioEstado) {
+        console.log('🚀 Primera acción detectada, actualizando estado a EnProceso');
+        
+        // ✅ Crear fecha de inicio como inicio del día en hora local
+        const hoy = getTodayLocal();
+        const [year, month, day] = hoy.split('-').map(Number);
+        // Crear fecha local a medianoche y convertir a ISO
+        const fechaLocal = new Date(year, month - 1, day, 0, 0, 0, 0);
+        const fechaInicioISO = fechaLocal.toISOString();
+        
+        console.log('📅 Fecha de inicio que se enviará:', fechaInicioISO);
+        
+        const response = await fetch(`https://backend-reporte.onrender.com/api/reportes/${reportId}/estado`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            estado: "EnProceso",
+            fecha_inicio: fechaInicioISO
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al actualizar estado del reporte');
+        }
+        
+        console.log('✅ Estado actualizado a EnProceso con fecha_inicio');
+        
+        // 🚀 Marcar que se debe refrescar la tabla cuando se cierre el modal
+        // porque el estado del reporte cambió
+        setShouldRefreshTable(true);
+      }
+      
+      // 🚀 Guardar todas las nuevas acciones
       for (const newAction of newActions) {
         await createAction(newAction);
       }
       
       setNewActions([]);
-      await fetchActions();
+      await fetchActions(); // Solo refrescar las acciones dentro del modal, no la tabla principal
+      
+      // 🚀 NO llamar onActionSaved aquí - solo se llamará cuando se cierre el modal si shouldRefreshTable es true
     } catch (error) {
       console.error("Error al guardar acciones:", error);
     }
@@ -134,14 +213,17 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
       console.log('📅 Fecha fin del estado:', fechaFin);
 
       // ✅ Usar fechaFin del estado o fecha actual como fallback
-      const fechaParaEnviar = fechaFin || new Date().toISOString().slice(0, 10);
+      const fechaParaEnviar = fechaFin || getTodayLocal();
       console.log('📅 Fecha que se usará:', fechaParaEnviar);
 
-      // ✅ CORRECTO: Crear fecha completa con hora actual
-      const fechaCompleta = new Date(fechaParaEnviar + 'T23:59:59.999Z');
-      const fechaFinISO = fechaCompleta.toISOString();
+      // ✅ CORRECTO: Crear fecha en hora local y convertir a UTC para el backend
+      // Formato: YYYY-MM-DD -> Date local a las 23:59:59.999
+      const [year, month, day] = fechaParaEnviar.split('-').map(Number);
+      const fechaLocal = new Date(year, month - 1, day, 23, 59, 59, 999);
+      const fechaFinISO = fechaLocal.toISOString();
       
       console.log('🔍 Fecha fin original:', fechaParaEnviar);
+      console.log('🔍 Fecha local creada:', fechaLocal);
       console.log('🔍 Fecha fin ISO (completa):', fechaFinISO);
       
       const requestData = {
@@ -167,7 +249,10 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
       const result = await response.json();
       console.log('✅ Success response:', result);
 
-      if (onActionSaved) onActionSaved();
+      // 🚀 Marcar que se debe refrescar la tabla porque el estado cambió a "Revisado"
+      setShouldRefreshTable(true);
+      
+      // 🚀 Cerrar el modal - el useEffect se encargará de refrescar la tabla
       setOpen(false);
     } catch (error) {
       console.error("Error al finalizar reporte:", error);
@@ -195,7 +280,7 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
               </label>
               <div className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-600 flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-gray-500" />
-                {fechaInicio ? new Date(fechaInicio).toLocaleDateString('es-ES') : 'No especificada'}
+                {formatDateForDisplay(fechaInicio)}
               </div>
             </div>
             <div className="space-y-2">
@@ -205,7 +290,7 @@ export function ActionsDialog({ reportId, report, onActionSaved }: ActionsDialog
               {report?.estado === "Revisado" ? (
                 <div className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm text-gray-600 flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-gray-500" />
-                  {fechaFin ? new Date(fechaFin).toLocaleDateString('es-ES') : 'No especificada'}
+                  {formatDateForDisplay(fechaFin)}
                 </div>
               ) : (
                 <Input

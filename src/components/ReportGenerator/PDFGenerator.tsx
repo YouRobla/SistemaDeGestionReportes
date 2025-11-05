@@ -1,4 +1,4 @@
-import { Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, Image, Link } from '@react-pdf/renderer';
 import type { Report } from '@/types';
 import type { Action } from '@/types/actions';
 
@@ -153,11 +153,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   simpleLink: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#3B82F6',
     marginBottom: 4,
     fontFamily: 'Courier',
-    wordBreak: 'break-word',
   },
   simpleEvidenceList: {
     marginBottom: 15,
@@ -166,11 +165,10 @@ const styles = StyleSheet.create({
     minHeight: 30,
   },
   simpleEvidenceItem: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#3B82F6',
     marginBottom: 3,
     fontFamily: 'Courier',
-    wordBreak: 'break-word',
   },
   evidenceContainer: {
     marginTop: 8,
@@ -189,11 +187,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   evidenceUrl: {
-    fontSize: 9,
+    fontSize: 8,
     color: '#3B82F6',
     marginBottom: 3,
     fontFamily: 'Courier',
-    wordBreak: 'break-word',
   },
   noEvidenceText: {
     fontSize: 10,
@@ -390,9 +387,9 @@ export function PDFGenerator({ report, actions }: PDFGeneratorProps) {
                   <View style={styles.evidenceContainer}>
                     <Text style={styles.evidenceTitle}>Evidencias adjuntas:</Text>
                     {action.evidencias.map((evidencia) => (
-                      <Text key={evidencia.id} style={styles.evidenceUrl}>
+                      <Link key={evidencia.id} src={evidencia.url} style={styles.evidenceUrl}>
                         • {evidencia.url}
-                      </Text>
+                      </Link>
                     ))}
                   </View>
                 ) : (
@@ -410,9 +407,9 @@ export function PDFGenerator({ report, actions }: PDFGeneratorProps) {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Evidencias del Reporte ({report.evidencias.length})</Text>
             {report.evidencias.map((evidencia, index) => (
-              <Text key={evidencia.id} style={styles.simpleLink}>
+              <Link key={evidencia.id} src={evidencia.url} style={styles.simpleLink}>
                 • Evidencia {index + 1}: {evidencia.url}
-              </Text>
+              </Link>
             ))}
           </View>
         )}
@@ -426,9 +423,9 @@ export function PDFGenerator({ report, actions }: PDFGeneratorProps) {
           {report.evidencias && report.evidencias.length > 0 && (
             <View style={styles.simpleEvidenceList}>
               {report.evidencias.map((evidencia, index) => (
-                <Text key={evidencia.id} style={styles.simpleEvidenceItem}>
+                <Link key={evidencia.id} src={evidencia.url} style={styles.simpleEvidenceItem}>
                   {index + 1}. {evidencia.url}
-                </Text>
+                </Link>
               ))}
             </View>
           )}
@@ -439,9 +436,9 @@ export function PDFGenerator({ report, actions }: PDFGeneratorProps) {
             {actions.map((action) => (
               action.evidencias && action.evidencias.length > 0 && 
               action.evidencias.map((evidencia, index) => (
-                <Text key={evidencia.id} style={styles.simpleEvidenceItem}>
+                <Link key={evidencia.id} src={evidencia.url} style={styles.simpleEvidenceItem}>
                   {report.evidencias?.length + index + 1}. {evidencia.url}
-                </Text>
+                </Link>
               ))
             ))}
             </View>
